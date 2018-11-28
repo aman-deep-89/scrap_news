@@ -16,26 +16,34 @@ error_reporting(E_ALL);
         $date = $crawler->filter(".entry-date.published")->extract('_text');
         $datePublished[] = $date;
         date_default_timezone_set('Africa/Lagos');
-        $articleTimestamp = $date;
-        if($datePublished )
-        $article = "";
-        $crawler->filter('.entry-content > p')->each(function($node)use(&$article,&$articles){
-                // var_dump($node->text());
-                $article .= $node->text();
+        $articleTimestamp = strtotime($date);
+        $articleDay = date('z',$articleTimestamp);
+        $currentDay = date('z'); 
+        print $articleDay . "<br>";
+        print $currentDay . "<br>";
+        if( $articleDay + 1 >= $currentDay  ){
+                $article = "";
+                $crawler->filter('.entry-content > p')->each(function($node)use(&$article,&$articles){
+                        // var_dump($node->text());
+                        $article .= $node->text();
+                        
+                });
+                $crawler->filter('.tags-links a:not([href])')->each(function($node) use(&$categories){
+                        $categories[] = $node->text();
+                        
+                });
                 
-        });
-        $crawler->filter('.tags-links a:not([href])')->each(function($node) use(&$categories){
-                $categories[] = $node->text();
-                
-        });
-        
-        $image = $crawler->filter('.blurry')->eq(0)->attr('style');
-        $imageURL = strstr(strstr($image,"h"),"'",TRUE) . "<br><br>";
-        $articles[] = $article;
-        //for each article , do database insertion stuff here
-        function saveInDatabase($postTitle,$postBody,$postImageURL,$postDate,$postCategory){
+                $image = $crawler->filter('.blurry')->eq(0)->attr('style');
+                $imageURL = strstr(strstr($image,"h"),"'",TRUE) . "<br><br>";
+                $articles[] = $article;
+                //for each article , do database insertion stuff here
+                function saveInDatabase($postTitle,$postBody,$postImageURL,$postDate,$postCategory){
 
+                }
+        }else{
+                //we do not want to continue and we break out .
         }
+        
     });
     }catch(Exception $e){
         var_dump($e);
