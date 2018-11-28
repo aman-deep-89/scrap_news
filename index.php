@@ -9,27 +9,34 @@ error_reporting(E_ALL);
     $articles = [];
     $datePublished = [];
     $categories = [];
+    try{
     $crawler->filter('.seg-title')->each(function ($node) use(&$headings,$crawler,$client,&$articles,&$datePublished,&$categories){
         $link = $crawler->filter("[title='".$node->text()."']")->attr('href');
         $crawler = $client->request('GET',$link);
+        $article = "";
+        $crawler->filter('.entry-content > p')->each(function($node)use(&$article,&$articles){
+                // var_dump($node->text());
+                $article .= $node->text();
+                
+        });
         $datePublished[] = $crawler->filter(".entry-date.published")->extract('_text');
         $crawler->filter('.tags-links a:not([href])')->each(function($node) use(&$categories){
                 $categories[] = $node->text();
                 
         });
-        $article = "";
-        $crawler->filter('div > .entry-content > p')->nextAll()->each(function($node)use(&$article,&$articles){
-                // var_dump($node->text());
-                $article .= $node->text();
-                
-        });
-        $crawler->filter('.blurry')->
+        
+        $image = $crawler->filter('.blurry')->eq(0)->attr('style');
+
         $articles[] = $article;
         //for each article , do database insertion stuff here
     });
+    }catch(Exception $e){
+        var_dump($e);
+        echo " it is from here oo";
+    }
         var_dump($datePublished);
         var_dump($categories);
-        var_dump($articles);
+        print_r($articles);
 //     $client = new Client();
 //     $crawler = $client->request('GET','https://punchng.com/topics/news');
 //     for($i=0; $i<count($headings); $i++){
