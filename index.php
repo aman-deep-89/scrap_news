@@ -9,14 +9,13 @@ error_reporting(E_ALL);
     $articles = [];
     $datePublished = [];
     $categories = [];
-    $crawler->filter('.seg-title')->each(function ($node) use(&$headings,$crawler,$client,&$articles,&$datePublished){
+    $crawler->filter('.seg-title')->each(function ($node) use(&$headings,$crawler,$client,&$articles,&$datePublished,&$categories){
         $link = $crawler->filter("[title='".$node->text()."']")->attr('href');
-        // print $node->text(). PHP_EOL.PHP_EOL;
         $crawler = $client->request('GET',$link);
         $datePublished[] = $crawler->filter(".entry-date.published")->extract('_text');
-        $crawler->filter('.tags-links>a')->nextAll()->each(function($node) use(&$categories){
+        $crawler->filter('.tags-links a:not([href])')->each(function($node) use(&$categories){
                 $categories[] = $node->text();
-                var_dump($node->text());
+                
         });
         $article = "";
         $crawler->filter('div > .entry-content > p')->nextAll()->each(function($node)use(&$article,&$articles){
@@ -24,18 +23,13 @@ error_reporting(E_ALL);
                 $article .= $node->text();
                 
         });
-        print $article . "<br> <br> <hr>" ;
+        $crawler->filter('.blurry')->
         $articles[] = $article;
-
-        
-        
-        
-        
-
+        //for each article , do database insertion stuff here
     });
         var_dump($datePublished);
         var_dump($categories);
-//     var_dump($articles);
+        var_dump($articles);
 //     $client = new Client();
 //     $crawler = $client->request('GET','https://punchng.com/topics/news');
 //     for($i=0; $i<count($headings); $i++){
