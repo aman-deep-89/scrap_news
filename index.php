@@ -13,22 +13,29 @@ error_reporting(E_ALL);
     $crawler->filter('.seg-title')->each(function ($node) use(&$headings,$crawler,$client,&$articles,&$datePublished,&$categories){
         $link = $crawler->filter("[title='".$node->text()."']")->attr('href');
         $crawler = $client->request('GET',$link);
+        $date = $crawler->filter(".entry-date.published")->extract('_text');
+        $datePublished[] = $date;
+        date_default_timezone_set('Africa/Lagos');
+        $articleTimestamp = $date;
+        if($datePublished )
         $article = "";
         $crawler->filter('.entry-content > p')->each(function($node)use(&$article,&$articles){
                 // var_dump($node->text());
                 $article .= $node->text();
                 
         });
-        $datePublished[] = $crawler->filter(".entry-date.published")->extract('_text');
         $crawler->filter('.tags-links a:not([href])')->each(function($node) use(&$categories){
                 $categories[] = $node->text();
                 
         });
         
         $image = $crawler->filter('.blurry')->eq(0)->attr('style');
-
+        $imageURL = strstr(strstr($image,"h"),"'",TRUE) . "<br><br>";
         $articles[] = $article;
         //for each article , do database insertion stuff here
+        function saveInDatabase($postTitle,$postBody,$postImageURL,$postDate,$postCategory){
+
+        }
     });
     }catch(Exception $e){
         var_dump($e);
