@@ -1,4 +1,5 @@
 <?php
+header("Content-Type: text/html;charset=utf-8");
 ini_set("display_errors",1);
 error_reporting(E_ALL);
     require "vendor/autoload.php";
@@ -8,16 +9,25 @@ error_reporting(E_ALL);
         $host = "localhost";
         $dbName = "wpmajor_db";
         $username = "root";
-        $password = "jesussaves";
+        $password = "";
         $db = new PDO("mysql:host=$host;dbname=$dbName",$username,$password);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $time = date('Y-m-d H:i:s');
-        $sql = "INSERT INTO news (title,content,category,url,image,published_date) VALUES (?,?,?,?,?,?) ";
-        $prepared = $db->prepare($sql);
-        $executed = $prepared->execute([$postTitle,$postBody,rtrim($postCategory,','),$postLink,$postImageURL,$time]);
-        if($executed){
-                echo " Saved in the database ";
+        $preQuery = "SET NAMES 'utf8'";
+        $preparatory = $db->prepare($preQuery);
+        $preparatory->execute();
+        $query = "SELECT COUNT(*) FROM news WHERE title = ? ";
+        $preparation = $db->prepare($query);
+        $preparation->execute([$postTitle]);
+        if($preparation->fetch()[0] < 1){
+                $sql = "INSERT INTO news (title,content,category,url,image,published_date) VALUES (?,?,?,?,?,?) ";
+                $prepared = $db->prepare($sql);
+                $executed = $prepared->execute([$postTitle,$postBody,rtrim($postCategory,','),$postLink,$postImageURL,$time]);
+                if($executed){
+                        echo " Saved in the database ";
+                }
         }
+        
      }
     function scrapePunch($newsCategory,$numberOfPagesToScrape){
         $client = new Client();
@@ -55,7 +65,8 @@ error_reporting(E_ALL);
                                         });
                         
                                         $image = $crawler->filter('.blurry')->eq(0)->attr('style');
-                                        $imageURL = strstr(strstr($image,"h"),"'",TRUE) . "<br><br>"; 
+                                        $imaged = str_replace("-30x17","",$image);
+                                        $imageURL = strstr(strstr($imaged,"h"),"'",TRUE); 
                                         //save it to the database
                                         saveInDatabase($postTitle,$article,$imageURL,$date[0],$categories,$link);    
                                 }
