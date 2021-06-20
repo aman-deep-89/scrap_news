@@ -184,7 +184,8 @@ class Crawler implements \Countable, \IteratorAggregate
     public function addHtmlContent($content, $charset = 'UTF-8')
     {
         $internalErrors = libxml_use_internal_errors(true);
-        $disableEntities = libxml_disable_entity_loader(true);
+        //$disableEntities = libxml_disable_entity_loader(true);
+        $disableEntities = '';
 
         $dom = new \DOMDocument('1.0', $charset);
         $dom->validateOnParse = true;
@@ -247,7 +248,7 @@ class Crawler implements \Countable, \IteratorAggregate
         }
 
         $internalErrors = libxml_use_internal_errors(true);
-        $disableEntities = libxml_disable_entity_loader(true);
+        //$disableEntities = libxml_disable_entity_loader(true);
 
         $dom = new \DOMDocument('1.0', $charset);
         $dom->validateOnParse = true;

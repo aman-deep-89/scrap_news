@@ -1,0 +1,27 @@
+ //function scrapeBusinessdayonline($newsCategory,$numberOfPagesToScrape)
+//function scrapeDailytrust($newsCategory,$numberOfPagesToScrape)
+//function scrapeGuardian($newsCategory,$numberOfPagesToScrape)
+//function scrapeIndependent($newsCategory,$numberOfPagesToScrape)
+//function scrapeLeadership($newsCategory,$numberOfPagesToScrape)
+//function scrapeThenationonlineng($newsCategory,$numberOfPagesToScrape)
+//function scrapeThisdaylive($newsCategory,$numberOfPagesToScrape)
+//function scrapeTribuneonlineng($newsCategory,$numberOfPagesToScrape)
+//function scrapeVanguardngr($newsCategory,$numberOfPagesToScrape)
+//function scrapePremiumtimesng($newsCategory,$numberOfPagesToScrape)
+//function scrapeSaharareporters($newsCategory,$numberOfPagesToScrape)
+//function scrapeSunnewsonline($newsCategory,$numberOfPagesToScrape)
+//function scrapeVenturesafrica($newsCategory,$numberOfPagesToScrape)
+
+
+//dailytrust.com.ng 
+//guardian.ng 
+//independent.ng
+//leadership.ng
+//thenationonlineng.net 
+//thisdaylive.com
+//tribuneonlineng.com 
+//vanguardngr.com 
+//premiumtimesng.com 
+//saharareporters.com 
+//sunnewsonline.com 
+//venturesafrica.com
