@@ -30,9 +30,12 @@ use Goutte\Client;
         $data=array();     
         $last_date=$ldate=null;        
         $crawler->filter('body .news_table tr:not(.dateDivisionRow)')->each(function ($node) use($crawler,$client,&$data,&$last_date,&$ldate,&$keywords){
-            $text=$node->attr("data-datenews").$node->text();
+            $txt=$node->filter('div.story_header>a>span')->extract('_text');
+            $text=$txt[0];
             $ldate=($node->attr("data-datenews"));
-            if(preg_match("/$keywords/",$text)) {
+            //echo 'match '.$keywords.' in '.$text.' '.preg_match("/$keywords/",$text);
+            if(preg_match("/$keywords/i",$text)) {
+                //echo 'matched found';
                 $ticker=$node->filter('.ticker.fpo_overlay')->extract('data-ticker');
                 $link=$node->filter('.newsTitleLink')->extract("href");
                 $data[]=$ldate.' '.$ticker[0].' '.$link[0];
@@ -45,9 +48,10 @@ use Goutte\Client;
             $crawler=$client->request('GET','https://thefly.com/ajax/newsAjax.php?market_stories=on&hot_stocks_filter=on&rumors_filter=on&general_news_filter=on&periodicals_filter=on&earnings_filter=on&technical_analysis_filter=on&options_filter=on&syndicates_filter=on&onthefly=on&insight_filter=on&market_mover_filter=on&analyst_recommendations=on&upgrade_filter=on&downgrade_filter=on&initiate_filter=on&no_change_filter=on&events=on&symbol=&page=news&allDay=0&_='.$last_date);
             $crawler->filter('body .news_table tr:not(.dateDivisionRow)')->each(function ($node) use($crawler,$client,&$data,&$i,&$ldate,&$dt,&$last_date,&$keywords){                
                 //$data[]=$i.':-'.$dt.'=='.$last_date.($ldate<=$dt).'==='.$node->attr("data-datanews").$node->text();
-                $text=$node->attr("data-datenews").$node->text();
+                $txt=$node->filter('div.story_header>a>span')->extract('_text');
+                $text=$txt[0];
                 $ldate=($node->attr("data-datenews"));
-                if(preg_match("/$keywords/",$text)) {
+                if(preg_match("/$keywords/i",$text)) {
                     $ticker=$node->filter('.ticker.fpo_overlay')->extract('_text');
                     $link=$node->filter('.newsTitleLink')->extract("href");
                     $data[]=$ldate.' '.$ticker[0].' '.$link[0];
